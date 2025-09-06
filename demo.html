@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nautica VPN - Demo</title>
+    <title>PROXYV2 - Modern Proxy Manager</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
       /* For Webkit-based browsers (Chrome, Safari and Opera) */
@@ -15,6 +15,38 @@
       .scrollbar-hide {
           -ms-overflow-style: none;  /* IE and Edge */
           scrollbar-width: none;  /* Firefox */
+      }
+
+      /* Custom styles for PROXYV2 */
+      .country-flag-btn {
+        @apply flex flex-col items-center p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200;
+      }
+
+      .country-flag-btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .text-gradient {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .proxy-card {
+        @apply bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-xl border border-slate-200 dark:border-slate-700 transition-all duration-300 hover:scale-105;
+      }
+
+      .protocol-btn {
+        @apply bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-lg p-3 transition-all duration-200 transform hover:scale-105;
+      }
+
+      .modal-overlay {
+        @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+      }
+
+      .modal-content {
+        @apply bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl;
       }
     </style>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
@@ -49,111 +81,167 @@
     </div>
     
     <!-- Select Country -->
-    <div>
-      <div
-        class="h-full fixed top-0 w-14 bg-white dark:bg-neutral-800 border-r-2 border-neutral-800 dark:border-white z-20 overflow-y-scroll scrollbar-hide"
-      >
-        <div class="text-2xl flex flex-col items-center h-full gap-2">
-          <a href="#" class="py-1"><img width=20 src="https://hatscripts.github.io/circle-flags/flags/id.svg" /></a>
-          <a href="#" class="py-1"><img width=20 src="https://hatscripts.github.io/circle-flags/flags/sg.svg" /></a>
-          <a href="#" class="py-1"><img width=20 src="https://hatscripts.github.io/circle-flags/flags/us.svg" /></a>
-          <a href="#" class="py-1"><img width=20 src="https://hatscripts.github.io/circle-flags/flags/jp.svg" /></a>
-          <a href="#" class="py-1"><img width=20 src="https://hatscripts.github.io/circle-flags/flags/kr.svg" /></a>
+    <div class="fixed top-0 left-0 right-0 z-20 bg-white dark:bg-neutral-800 border-b-2 border-neutral-800 dark:border-white">
+      <div class="px-4 py-3">
+        <h2 class="text-lg font-semibold text-neutral-800 dark:text-white mb-3 text-center">Select Country</h2>
+        <div class="bg-gray-100 dark:bg-gray-700 rounded-xl p-4 border-2 border-gray-300 dark:border-gray-600">
+          <div class="overflow-x-auto scrollbar-hide">
+            <div class="flex flex-col gap-3 min-w-max">
+              <!-- Row 1 -->
+              <div class="flex gap-3 justify-center">
+                <button onclick="selectCountry('ID', 'Indonesia')" class="country-flag-btn group">
+                  <img width="32" src="https://hatscripts.github.io/circle-flags/flags/id.svg" class="rounded-full shadow-md group-hover:shadow-lg transition-all duration-200" />
+                  <span class="text-xs mt-1 text-gray-600 dark:text-gray-300">ID</span>
+                </button>
+                <button onclick="selectCountry('SG', 'Singapore')" class="country-flag-btn group">
+                  <img width="32" src="https://hatscripts.github.io/circle-flags/flags/sg.svg" class="rounded-full shadow-md group-hover:shadow-lg transition-all duration-200" />
+                  <span class="text-xs mt-1 text-gray-600 dark:text-gray-300">SG</span>
+                </button>
+                <button onclick="selectCountry('US', 'United States')" class="country-flag-btn group">
+                  <img width="32" src="https://hatscripts.github.io/circle-flags/flags/us.svg" class="rounded-full shadow-md group-hover:shadow-lg transition-all duration-200" />
+                  <span class="text-xs mt-1 text-gray-600 dark:text-gray-300">US</span>
+                </button>
+                <button onclick="selectCountry('JP', 'Japan')" class="country-flag-btn group">
+                  <img width="32" src="https://hatscripts.github.io/circle-flags/flags/jp.svg" class="rounded-full shadow-md group-hover:shadow-lg transition-all duration-200" />
+                  <span class="text-xs mt-1 text-gray-600 dark:text-gray-300">JP</span>
+                </button>
+                <button onclick="selectCountry('KR', 'South Korea')" class="country-flag-btn group">
+                  <img width="32" src="https://hatscripts.github.io/circle-flags/flags/kr.svg" class="rounded-full shadow-md group-hover:shadow-lg transition-all duration-200" />
+                  <span class="text-xs mt-1 text-gray-600 dark:text-gray-300">KR</span>
+                </button>
+              </div>
+              <!-- Row 2 -->
+              <div class="flex gap-3 justify-center">
+                <button onclick="selectCountry('GB', 'United Kingdom')" class="country-flag-btn group">
+                  <img width="32" src="https://hatscripts.github.io/circle-flags/flags/gb.svg" class="rounded-full shadow-md group-hover:shadow-lg transition-all duration-200" />
+                  <span class="text-xs mt-1 text-gray-600 dark:text-gray-300">GB</span>
+                </button>
+                <button onclick="selectCountry('DE', 'Germany')" class="country-flag-btn group">
+                  <img width="32" src="https://hatscripts.github.io/circle-flags/flags/de.svg" class="rounded-full shadow-md group-hover:shadow-lg transition-all duration-200" />
+                  <span class="text-xs mt-1 text-gray-600 dark:text-gray-300">DE</span>
+                </button>
+                <button onclick="selectCountry('FR', 'France')" class="country-flag-btn group">
+                  <img width="32" src="https://hatscripts.github.io/circle-flags/flags/fr.svg" class="rounded-full shadow-md group-hover:shadow-lg transition-all duration-200" />
+                  <span class="text-xs mt-1 text-gray-600 dark:text-gray-300">FR</span>
+                </button>
+                <button onclick="selectCountry('CA', 'Canada')" class="country-flag-btn group">
+                  <img width="32" src="https://hatscripts.github.io/circle-flags/flags/ca.svg" class="rounded-full shadow-md group-hover:shadow-lg transition-all duration-200" />
+                  <span class="text-xs mt-1 text-gray-600 dark:text-gray-300">CA</span>
+                </button>
+                <button onclick="selectCountry('AU', 'Australia')" class="country-flag-btn group">
+                  <img width="32" src="https://hatscripts.github.io/circle-flags/flags/au.svg" class="rounded-full shadow-md group-hover:shadow-lg transition-all duration-200" />
+                  <span class="text-xs mt-1 text-gray-600 dark:text-gray-300">AU</span>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
     
-    <!-- Main -->
-    <div id="container-header">
-      <div id="container-info" class="bg-amber-400 border-2 border-neutral-800 text-right px-5">
-        <div class="flex justify-end gap-3 text-sm">
-          <p id="container-info-ip">IP: 127.0.0.1</p>
-          <p id="container-info-country">Country: Indonesia</p>
-          <p id="container-info-isp">ISP: Localhost</p>
+    <!-- Main Content -->
+    <div class="pt-32">
+      <!-- Info Bar -->
+      <div id="container-header" class="mb-6">
+        <div id="container-info" class="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg mx-4 p-4 shadow-lg">
+          <div class="flex justify-between items-center text-sm">
+            <div class="flex gap-6">
+              <p id="container-info-ip">IP: 127.0.0.1</p>
+              <p id="container-info-country">Country: Indonesia</p>
+              <p id="container-info-isp">ISP: Localhost</p>
+            </div>
+            <div class="text-right">
+              <p class="font-semibold">PROXYV2</p>
+              <p class="text-xs opacity-80">Modern Proxy Manager</p>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-    
-    <div class="container">
-      <div
-        id="container-title"
-        class="sticky bg-white dark:bg-neutral-800 border-b-2 border-neutral-800 dark:border-white z-10 py-6 w-screen"
-      >
-        <h1 class="text-xl text-center text-neutral-800 dark:text-white">
-          Welcome to <span class='text-indigo-500 font-semibold'>Nautica</span>
-        </h1>
-        <div class="text-center mt-2">
-          <span>Total: 24</span>
-          <span>Page: 0/0</span>
+      
+      <div class="container mx-auto px-4">
+        <div
+          id="container-title"
+          class="bg-white dark:bg-neutral-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 py-6 mb-6"
+        >
+          <h1 class="text-3xl text-center text-neutral-800 dark:text-white font-bold mb-2">
+            Welcome to <span class='text-gradient font-extrabold'>PROXYV2</span>
+          </h1>
+          <div class="text-center text-gray-600 dark:text-gray-300">
+            <span class="bg-blue-100 dark:bg-blue-900 px-3 py-1 rounded-full text-sm font-medium">Total: 24</span>
+            <span class="bg-purple-100 dark:bg-purple-900 px-3 py-1 rounded-full text-sm font-medium ml-2">Page: 0/0</span>
+          </div>
         </div>
-      </div>
       
       <div class="flex gap-6 pt-10 w-screen justify-center">
         <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
           <!-- Proxy Card 1 -->
-          <div class="lozad scale-95 mb-4 bg-white dark:bg-slate-800 transition-all duration-300 rounded-lg p-6 flex flex-col shadow-md hover:shadow-lg border border-slate-200 dark:border-slate-700 hover:scale-105">
-            <div id="countryFlag" class="absolute -translate-y-11 -translate-x-2 border-4 border-white dark:border-slate-800 rounded-full overflow-hidden">
-              <img width="48" src="https://hatscripts.github.io/circle-flags/flags/id.svg" />
+          <div class="proxy-card lozad scale-95 mb-4 p-6 flex flex-col relative">
+            <div class="absolute -top-4 -left-4 z-10">
+              <div class="bg-white dark:bg-slate-800 rounded-full p-1 shadow-lg border-2 border-blue-500">
+                <img width="40" src="https://hatscripts.github.io/circle-flags/flags/id.svg" class="rounded-full" />
+              </div>
             </div>
             <div class="flex-grow">
-              <div id="ping-0" class="animate-pulse text-xs font-semibold text-slate-500 dark:text-slate-400 text-right">Idle 1.1.1.1:443</div>
+              <div id="ping-0" class="animate-pulse text-xs font-semibold text-slate-500 dark:text-slate-400 text-right mb-2">Idle 1.1.1.1:443</div>
             </div>
-            <div class="rounded-lg py-4 px-4 bg-slate-50 dark:bg-slate-700/50 flex-grow mt-4">
-              <h5 class="font-bold text-lg text-slate-800 dark:text-slate-100 mb-1 overflow-x-scroll scrollbar-hide text-nowrap">Cloudflare Inc.</h5>
-              <div class="text-slate-600 dark:text-slate-300 text-sm">
-                <p>IP: 1.1.1.1</p>
-                <p>Port: 443</p>
+            <div class="rounded-xl py-4 px-4 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-slate-700/50 dark:to-slate-600/50 flex-grow">
+              <h5 class="font-bold text-lg text-slate-800 dark:text-slate-100 mb-2 overflow-x-scroll scrollbar-hide text-nowrap">Cloudflare Inc.</h5>
+              <div class="text-slate-600 dark:text-slate-300 text-sm space-y-1">
+                <p class="flex justify-between"><span class="font-medium">IP:</span> <span class="font-mono">1.1.1.1</span></p>
+                <p class="flex justify-between"><span class="font-medium">Port:</span> <span class="font-mono">443</span></p>
                 <div id="container-region-check-0">
-                  <input id="config-sample-0" class="hidden" type="text" value="trojan://uuid@domain:443?security=tls&sni=domain&type=ws&host=domain&path=/1.1.1.1-443#1 🇮🇩 Cloudflare Inc. WS TLS [nautica]">
+                  <input id="config-sample-0" class="hidden" type="text" value="trojan://uuid@domain:443?security=tls&sni=domain&type=ws&host=domain&path=/1.1.1.1-443#1 🇮🇩 Cloudflare Inc. WS TLS [proxyv2]">
                 </div>
               </div>
             </div>
             <div class="flex flex-col gap-2 mt-4 text-sm">
-              <div class="flex gap-2 justify-around w-full">
-                <button class="bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 rounded-md p-2 w-full text-white font-semibold transition-colors duration-200" onclick="copyToClipboard('trojan://uuid@domain:443?security=tls&sni=domain&type=ws&host=domain&path=/1.1.1.1-443#1 🇮🇩 Cloudflare Inc. WS TLS [nautica]')">TROJAN TLS</button>
-                <button class="bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 rounded-md p-2 w-full text-white font-semibold transition-colors duration-200" onclick="copyToClipboard('vless://uuid@domain:443?security=tls&sni=domain&type=ws&host=domain&path=/1.1.1.1-443#1 🇮🇩 Cloudflare Inc. WS TLS [nautica]')">VLESS TLS</button>
+              <div class="grid grid-cols-2 gap-2">
+                <button class="protocol-btn" onclick="showAddressModal('trojan://uuid@domain:443?security=tls&sni=domain&type=ws&host=domain&path=/1.1.1.1-443#1 🇮🇩 Cloudflare Inc. WS TLS [proxyv2]')">TROJAN TLS</button>
+                <button class="protocol-btn" onclick="showAddressModal('vless://uuid@domain:443?security=tls&sni=domain&type=ws&host=domain&path=/1.1.1.1-443#1 🇮🇩 Cloudflare Inc. WS TLS [proxyv2]')">VLESS TLS</button>
               </div>
-              <div class="flex gap-2 justify-around w-full">
-                <button class="bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 rounded-md p-2 w-full text-white font-semibold transition-colors duration-200" onclick="copyToClipboard('ss://base64@domain:443?plugin=v2ray-plugin;tls;mux=0;mode=websocket;path=/1.1.1.1-443;host=domain#1 🇮🇩 Cloudflare Inc. WS TLS [nautica]')">SS TLS</button>
-                <button class="bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 rounded-md p-2 w-full text-white font-semibold transition-colors duration-200" onclick="copyToClipboard('trojan://uuid@domain:80?security=none&type=ws&host=domain&path=/1.1.1.1-443#1 🇮🇩 Cloudflare Inc. WS NTLS [nautica]')">TROJAN NTLS</button>
+              <div class="grid grid-cols-2 gap-2">
+                <button class="protocol-btn" onclick="showAddressModal('ss://base64@domain:443?plugin=v2ray-plugin;tls;mux=0;mode=websocket;path=/1.1.1.1-443;host=domain#1 🇮🇩 Cloudflare Inc. WS TLS [proxyv2]')">SS TLS</button>
+                <button class="protocol-btn" onclick="showAddressModal('trojan://uuid@domain:80?security=none&type=ws&host=domain&path=/1.1.1.1-443#1 🇮🇩 Cloudflare Inc. WS NTLS [proxyv2]')">TROJAN NTLS</button>
               </div>
-              <div class="flex gap-2 justify-around w-full">
-                <button class="bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 rounded-md p-2 w-full text-white font-semibold transition-colors duration-200" onclick="copyToClipboard('vless://uuid@domain:80?security=none&type=ws&host=domain&path=/1.1.1.1-443#1 🇮🇩 Cloudflare Inc. WS NTLS [nautica]')">VLESS NTLS</button>
-                <button class="bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 rounded-md p-2 w-full text-white font-semibold transition-colors duration-200" onclick="copyToClipboard('ss://base64@domain:80?plugin=v2ray-plugin;mux=0;mode=websocket;path=/1.1.1.1-443;host=domain#1 🇮🇩 Cloudflare Inc. WS NTLS [nautica]')">SS NTLS</button>
+              <div class="grid grid-cols-2 gap-2">
+                <button class="protocol-btn" onclick="showAddressModal('vless://uuid@domain:80?security=none&type=ws&host=domain&path=/1.1.1.1-443#1 🇮🇩 Cloudflare Inc. WS NTLS [proxyv2]')">VLESS NTLS</button>
+                <button class="protocol-btn" onclick="showAddressModal('ss://base64@domain:80?plugin=v2ray-plugin;mux=0;mode=websocket;path=/1.1.1.1-443;host=domain#1 🇮🇩 Cloudflare Inc. WS NTLS [proxyv2]')">SS NTLS</button>
               </div>
             </div>
           </div>
 
           <!-- Proxy Card 2 -->
-          <div class="lozad scale-95 mb-4 bg-white dark:bg-slate-800 transition-all duration-300 rounded-lg p-6 flex flex-col shadow-md hover:shadow-lg border border-slate-200 dark:border-slate-700 hover:scale-105">
-            <div id="countryFlag" class="absolute -translate-y-11 -translate-x-2 border-4 border-white dark:border-slate-800 rounded-full overflow-hidden">
-              <img width="48" src="https://hatscripts.github.io/circle-flags/flags/sg.svg" />
+          <div class="proxy-card lozad scale-95 mb-4 p-6 flex flex-col relative">
+            <div class="absolute -top-4 -left-4 z-10">
+              <div class="bg-white dark:bg-slate-800 rounded-full p-1 shadow-lg border-2 border-green-500">
+                <img width="40" src="https://hatscripts.github.io/circle-flags/flags/sg.svg" class="rounded-full" />
+              </div>
             </div>
             <div class="flex-grow">
-              <div id="ping-1" class="animate-pulse text-xs font-semibold text-slate-500 dark:text-slate-400 text-right">Idle 1.0.0.1:443</div>
+              <div id="ping-1" class="animate-pulse text-xs font-semibold text-slate-500 dark:text-slate-400 text-right mb-2">Idle 1.0.0.1:443</div>
             </div>
-            <div class="rounded-lg py-4 px-4 bg-slate-50 dark:bg-slate-700/50 flex-grow mt-4">
-              <h5 class="font-bold text-lg text-slate-800 dark:text-slate-100 mb-1 overflow-x-scroll scrollbar-hide text-nowrap">Cloudflare Inc.</h5>
-              <div class="text-slate-600 dark:text-slate-300 text-sm">
-                <p>IP: 1.0.0.1</p>
-                <p>Port: 443</p>
+            <div class="rounded-xl py-4 px-4 bg-gradient-to-br from-green-50 to-blue-50 dark:from-slate-700/50 dark:to-slate-600/50 flex-grow">
+              <h5 class="font-bold text-lg text-slate-800 dark:text-slate-100 mb-2 overflow-x-scroll scrollbar-hide text-nowrap">Cloudflare Inc.</h5>
+              <div class="text-slate-600 dark:text-slate-300 text-sm space-y-1">
+                <p class="flex justify-between"><span class="font-medium">IP:</span> <span class="font-mono">1.0.0.1</span></p>
+                <p class="flex justify-between"><span class="font-medium">Port:</span> <span class="font-mono">443</span></p>
                 <div id="container-region-check-1">
-                  <input id="config-sample-1" class="hidden" type="text" value="trojan://uuid@domain:443?security=tls&sni=domain&type=ws&host=domain&path=/1.0.0.1-443#2 🇸🇬 Cloudflare Inc. WS TLS [nautica]">
+                  <input id="config-sample-1" class="hidden" type="text" value="trojan://uuid@domain:443?security=tls&sni=domain&type=ws&host=domain&path=/1.0.0.1-443#2 🇸🇬 Cloudflare Inc. WS TLS [proxyv2]">
                 </div>
               </div>
             </div>
             <div class="flex flex-col gap-2 mt-4 text-sm">
-              <div class="flex gap-2 justify-around w-full">
-                <button class="bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 rounded-md p-2 w-full text-white font-semibold transition-colors duration-200" onclick="copyToClipboard('trojan://uuid@domain:443?security=tls&sni=domain&type=ws&host=domain&path=/1.0.0.1-443#2 🇸🇬 Cloudflare Inc. WS TLS [nautica]')">TROJAN TLS</button>
-                <button class="bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 rounded-md p-2 w-full text-white font-semibold transition-colors duration-200" onclick="copyToClipboard('vless://uuid@domain:443?security=tls&sni=domain&type=ws&host=domain&path=/1.0.0.1-443#2 🇸🇬 Cloudflare Inc. WS TLS [nautica]')">VLESS TLS</button>
+              <div class="grid grid-cols-2 gap-2">
+                <button class="protocol-btn" onclick="showAddressModal('trojan://uuid@domain:443?security=tls&sni=domain&type=ws&host=domain&path=/1.0.0.1-443#2 🇸🇬 Cloudflare Inc. WS TLS [proxyv2]')">TROJAN TLS</button>
+                <button class="protocol-btn" onclick="showAddressModal('vless://uuid@domain:443?security=tls&sni=domain&type=ws&host=domain&path=/1.0.0.1-443#2 🇸🇬 Cloudflare Inc. WS TLS [proxyv2]')">VLESS TLS</button>
               </div>
-              <div class="flex gap-2 justify-around w-full">
-                <button class="bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 rounded-md p-2 w-full text-white font-semibold transition-colors duration-200" onclick="copyToClipboard('ss://base64@domain:443?plugin=v2ray-plugin;tls;mux=0;mode=websocket;path=/1.0.0.1-443;host=domain#2 🇸🇬 Cloudflare Inc. WS TLS [nautica]')">SS TLS</button>
-                <button class="bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 rounded-md p-2 w-full text-white font-semibold transition-colors duration-200" onclick="copyToClipboard('trojan://uuid@domain:80?security=none&type=ws&host=domain&path=/1.0.0.1-443#2 🇸🇬 Cloudflare Inc. WS NTLS [nautica]')">TROJAN NTLS</button>
+              <div class="grid grid-cols-2 gap-2">
+                <button class="protocol-btn" onclick="showAddressModal('ss://base64@domain:443?plugin=v2ray-plugin;tls;mux=0;mode=websocket;path=/1.0.0.1-443;host=domain#2 🇸🇬 Cloudflare Inc. WS TLS [proxyv2]')">SS TLS</button>
+                <button class="protocol-btn" onclick="showAddressModal('trojan://uuid@domain:80?security=none&type=ws&host=domain&path=/1.0.0.1-443#2 🇸🇬 Cloudflare Inc. WS NTLS [proxyv2]')">TROJAN NTLS</button>
               </div>
-              <div class="flex gap-2 justify-around w-full">
-                <button class="bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 rounded-md p-2 w-full text-white font-semibold transition-colors duration-200" onclick="copyToClipboard('vless://uuid@domain:80?security=none&type=ws&host=domain&path=/1.0.0.1-443#2 🇸🇬 Cloudflare Inc. WS NTLS [nautica]')">VLESS NTLS</button>
-                <button class="bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 rounded-md p-2 w-full text-white font-semibold transition-colors duration-200" onclick="copyToClipboard('ss://base64@domain:80?plugin=v2ray-plugin;mux=0;mode=websocket;path=/1.0.0.1-443;host=domain#2 🇸🇬 Cloudflare Inc. WS TLS [nautica]')">SS NTLS</button>
+              <div class="grid grid-cols-2 gap-2">
+                <button class="protocol-btn" onclick="showAddressModal('vless://uuid@domain:80?security=none&type=ws&host=domain&path=/1.0.0.1-443#2 🇸🇬 Cloudflare Inc. WS NTLS [proxyv2]')">VLESS NTLS</button>
+                <button class="protocol-btn" onclick="showAddressModal('ss://base64@domain:80?plugin=v2ray-plugin;mux=0;mode=websocket;path=/1.0.0.1-443;host=domain#2 🇸🇬 Cloudflare Inc. WS NTLS [proxyv2]')">SS NTLS</button>
               </div>
             </div>
           </div>
@@ -167,6 +255,59 @@
           <li><button class="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white font-semibold border-2 border-neutral-800 rounded-lg transition-colors">Next</button></li>
         </ul>
       </nav>
+    </div>
+
+    <!-- Address Input Modal -->
+    <div id="address-modal" class="modal-overlay hidden">
+      <div class="modal-content">
+        <div class="text-center mb-6">
+          <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Enter Your Address</h3>
+          <p class="text-gray-600 dark:text-gray-300">Please enter your domain address to generate the proxy configuration</p>
+        </div>
+        <div class="mb-6">
+          <input 
+            type="text" 
+            id="address-input" 
+            placeholder="example.com" 
+            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+          />
+        </div>
+        <div class="flex gap-3">
+          <button 
+            onclick="closeAddressModal()" 
+            class="flex-1 px-4 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors"
+          >
+            Cancel
+          </button>
+          <button 
+            onclick="generateAndCopyConfig()" 
+            class="flex-1 px-4 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-lg transition-all"
+          >
+            Generate & Copy
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Country Details Modal -->
+    <div id="country-modal" class="modal-overlay hidden">
+      <div class="modal-content">
+        <div class="text-center mb-6">
+          <h3 id="country-modal-title" class="text-xl font-bold text-gray-800 dark:text-white mb-2">Country Details</h3>
+          <p class="text-gray-600 dark:text-gray-300">Available proxy servers for this country</p>
+        </div>
+        <div id="country-details" class="mb-6">
+          <!-- Country details will be populated here -->
+        </div>
+        <div class="flex gap-3">
+          <button 
+            onclick="closeCountryModal()" 
+            class="flex-1 px-4 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors"
+          >
+            Close
+          </button>
+        </div>
+      </div>
     </div>
 
     <div id="container-window" class="hidden">
@@ -271,8 +412,124 @@
       const windowContainer = document.getElementById("container-window");
       const windowInfoContainer = document.getElementById("container-window-info");
 
-      // Local variable
+      // Local variables
       let rawConfig = "";
+      let currentConfig = "";
+      let selectedCountry = "";
+
+      // Country selection function
+      function selectCountry(countryCode, countryName) {
+        selectedCountry = countryCode;
+        showCountryDetails(countryCode, countryName);
+      }
+
+      // Show country details modal
+      function showCountryDetails(countryCode, countryName) {
+        const modal = document.getElementById("country-modal");
+        const title = document.getElementById("country-modal-title");
+        const details = document.getElementById("country-details");
+        
+        title.textContent = `${countryName} (${countryCode}) - Proxy Servers`;
+        
+        // Sample proxy data for demonstration
+        const proxyData = {
+          'ID': [
+            { ip: '1.1.1.1', port: '443', isp: 'Cloudflare Inc.', ping: '45ms' },
+            { ip: '1.0.0.1', port: '443', isp: 'Cloudflare Inc.', ping: '52ms' },
+            { ip: '8.8.8.8', port: '443', isp: 'Google LLC', ping: '38ms' }
+          ],
+          'SG': [
+            { ip: '1.1.1.1', port: '443', isp: 'Cloudflare Inc.', ping: '12ms' },
+            { ip: '1.0.0.1', port: '443', isp: 'Cloudflare Inc.', ping: '15ms' }
+          ],
+          'US': [
+            { ip: '8.8.8.8', port: '443', isp: 'Google LLC', ping: '180ms' },
+            { ip: '1.1.1.1', port: '443', isp: 'Cloudflare Inc.', ping: '165ms' }
+          ]
+        };
+        
+        const proxies = proxyData[countryCode] || [];
+        details.innerHTML = '';
+        
+        proxies.forEach((proxy, index) => {
+          const proxyCard = document.createElement('div');
+          proxyCard.className = 'bg-gray-100 dark:bg-gray-700 rounded-lg p-4 mb-3';
+          proxyCard.innerHTML = `
+            <div class="flex justify-between items-center">
+              <div>
+                <h4 class="font-semibold text-gray-800 dark:text-white">${proxy.isp}</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-300">IP: ${proxy.ip}:${proxy.port}</p>
+                <p class="text-sm text-gray-600 dark:text-gray-300">Ping: ${proxy.ping}</p>
+              </div>
+              <div class="flex gap-2">
+                <button onclick="showProtocols('${proxy.ip}', '${proxy.port}', '${proxy.isp}')" 
+                        class="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs rounded transition-colors">
+                  View Protocols
+                </button>
+              </div>
+            </div>
+          `;
+          details.appendChild(proxyCard);
+        });
+        
+        modal.classList.remove('hidden');
+      }
+
+      // Show protocols for a specific proxy
+      function showProtocols(ip, port, isp) {
+        closeCountryModal();
+        // This would show the protocol selection for the specific proxy
+        // For now, we'll show a sample protocol
+        const sampleConfig = `trojan://uuid@domain:${port}?security=tls&sni=domain&type=ws&host=domain&path=/${ip}-${port}#${isp} WS TLS [proxyv2]`;
+        showAddressModal(sampleConfig);
+      }
+
+      // Close country modal
+      function closeCountryModal() {
+        document.getElementById("country-modal").classList.add("hidden");
+      }
+
+      // Show address input modal
+      function showAddressModal(config) {
+        currentConfig = config;
+        document.getElementById("address-modal").classList.remove("hidden");
+        document.getElementById("address-input").focus();
+      }
+
+      // Close address modal
+      function closeAddressModal() {
+        document.getElementById("address-modal").classList.add("hidden");
+        document.getElementById("address-input").value = "";
+        currentConfig = "";
+      }
+
+      // Generate and copy configuration
+      function generateAndCopyConfig() {
+        const address = document.getElementById("address-input").value.trim();
+        
+        if (!address) {
+          alert("Please enter a valid address");
+          return;
+        }
+        
+        // Replace 'domain' placeholder with actual address
+        const finalConfig = currentConfig.replace(/domain/g, address);
+        
+        // Copy to clipboard
+        navigator.clipboard.writeText(finalConfig).then(() => {
+          // Show success notification
+          notification.classList.remove("opacity-0");
+          setTimeout(() => {
+            notification.classList.add("opacity-0");
+          }, 2000);
+          
+          // Close modal
+          closeAddressModal();
+        }).catch(err => {
+          console.error('Failed to copy: ', err);
+          alert("Failed to copy to clipboard");
+        });
+      }
 
       function copyToClipboard(text) {
         toggleOutputWindow();
@@ -315,6 +572,32 @@
           rootElement.classList.add("dark");
         }
       }
+
+      // Close modals when clicking outside
+      document.addEventListener('click', function(event) {
+        const addressModal = document.getElementById('address-modal');
+        const countryModal = document.getElementById('country-modal');
+        
+        if (event.target === addressModal) {
+          closeAddressModal();
+        }
+        
+        if (event.target === countryModal) {
+          closeCountryModal();
+        }
+      });
+
+      // Handle Enter key in address input
+      document.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter' && !document.getElementById('address-modal').classList.contains('hidden')) {
+          generateAndCopyConfig();
+        }
+        
+        if (event.key === 'Escape') {
+          closeAddressModal();
+          closeCountryModal();
+        }
+      });
 
       window.onload = () => {
         const observer = lozad(".lozad", {
